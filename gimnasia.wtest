@@ -10,12 +10,12 @@ describe "rutinas" {
 
 //Punto 2: personas
 	const calamardo = new PersonaSedentario(peso = 60, tiempoQueEjercita = 5)
-	const bob =  new PersonaAtleta(peso = 40)// Una persona atleta con peso 40 
+	const bob =  new PersonaAtleta(peso = 40)
 
 //Punto 3: clubes
-	const recreo = new Predio(rutinas = [correrEnLaPlaya, maratonBA])//un predio con correrEnLaPlaya y maratonBA
-	const nautico = new Predio(rutinas = [remarEnElDelta, remarEnCaminoRemeros])//un predio con remarEnElDelta y remarEnCaminoRemeros
-	const clubBarrial = new Club(predios = [recreo, nautico]) //un club con recreo y nautico
+	const recreo = new Predio(rutinas = [correrEnLaPlaya, maratonBA])
+	const nautico = new Predio(rutinas = [remarEnElDelta, remarEnCaminoRemeros])
+	const clubBarrial = new Club(predios = [recreo, nautico]) 
 	
 
 // PUNTO 1
@@ -54,34 +54,28 @@ describe "rutinas" {
 	test '2.1.1 test sedentario running' {
 		// hacer que calamardo practique correrEnLaPlaya
 		// el peso de calamardo debería ser 59.948 (truncado a 3 decimales)
-		calamardo.aplicarRutina()
+		calamardo.aplicarRutina(correrEnLaPlaya)
 		assert.equals(59.948 , calamardo.peso().truncate(3))
 	} 
 	
 	test '2.1.2 test sedentario maraton' {
 		// hacer que calamardo practique maratonBA
 		// el peso de calamardo debería ser 59.871 (truncado a 3 decimales)
-		calamardo.peso(60)
-		calamardo.rutina(maratonBA)
-		calamardo.aplicarRutina()
+		calamardo.aplicarRutina(maratonBA)
 		assert.equals(59.871 , calamardo.peso().truncate(3))
 	} 
 
 	test '2.1.3 test sedentario remo' {
 		// hacer que calamardo practique remarEnElDelta
 		// el peso de calamardo debería ser 59.925 (truncado a 3 decimales)
-		calamardo.peso(60)
-		calamardo.rutina(remarEnElDelta)
-		calamardo.aplicarRutina()
+		calamardo.aplicarRutina(remarEnElDelta)
 		assert.equals(59.925 , calamardo.peso().truncate(3))
 	} 
 
 	test '2.1.3 test sedentario remo competicion' {
 		// hacer que calamardo practique remarEnCaminoRemeros
 		// el peso de calamardo debería ser 59.927 (truncado a 3 decimales)
-		calamardo.peso(60)
-		calamardo.rutina(remarEnCaminoRemeros)
-		calamardo.aplicarRutina()
+		calamardo.aplicarRutina(remarEnCaminoRemeros)
 		assert.equals(59.927 , calamardo.peso().truncate(3))
 	} 
 	
@@ -90,46 +84,43 @@ describe "rutinas" {
 		// hacer que calamardo practique correrEnLaPlaya (NO SE PUEDE!)
 		// el peso de calamardo debería ser 40 
 		calamardo.peso(40)
-		assert.throwsException(calamardo.aplicarRutina())
+		assert.throwsException({calamardo.aplicarRutina(correrEnLaPlaya)})
 		assert.equals(40 , calamardo.peso().truncate(3))
 	} 
 	
 	test "2.2.1 test atleta running" {
 		// hacer que bob practique correrEnLaPlaya
 		// el peso de bob debería ser 39.725 (truncado a 3 decimales)
-		bob.aplicarRutina()
+		bob.aplicarRutina(correrEnLaPlaya)
 		assert.equals(39.725 , bob.peso().truncate(3))
 	 }
 
 	test "2.2.2 test atleta maraton" {
 		// hacer que bob practique maratonBA
 		// el peso de bob debería ser 37.812 (truncado a 3 decimales)
-		bob.rutina(maratonBA)
-		bob.aplicarRutina()
+		bob.aplicarRutina(maratonBA)
 		assert.equals(37.812 , bob.peso().truncate(3))
 	 }
 
 	test "2.2.3 test atleta remo" {
 		// hacer que bob practique remarEnElDelta( NO SE PUEDE!)
-		// el peso de bob debería ser 40 
-		bob.rutina(remarEnElDelta)
-		bob.aplicarRutina()
-		assert.equals(40 , bob.peso().truncate(3))
+		// el peso de bob debería ser 40
+		assert.throwsException({bob.aplicarRutina(remarEnElDelta)})
+		assert.equals(40 , bob.peso())
 	}
 
 	test "2.2.3 test atleta remo de competición" {
 		// hacer que bob practique remarEnCaminoRemeros
 		// el peso de bob debería ser 39.406
-		bob.rutina(remarEnCaminoRemeros)
-		bob.aplicarRutina()
+		bob.aplicarRutina(remarEnCaminoRemeros)
 		assert.equals(39.406 , bob.peso().truncate(3))
 	}
 
 //punto 3: Consultas
 	test "3.1 el mejor predio" {
-		//El mejor predio del clubBarrial para bob debería ser recreo		
-		//El mejor predio del clubBarrial para calamardo debería ser recreo
+		//El mejor predio del clubBarrial para bob y calamardo debería ser recreo
 		assert.equals(recreo,clubBarrial.mejorPredioPara(bob))
+		assert.equals(recreo,clubBarrial.mejorPredioPara(calamardo))
 	}	
 	
 	test "3.2 predios tranquis" {

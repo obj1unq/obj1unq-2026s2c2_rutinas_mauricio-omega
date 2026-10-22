@@ -1,3 +1,7 @@
+//=======================================
+//1. Rutinas
+//=======================================
+
 class Rutina {
 	method caloriasConsumidas(tiempo) = 100 * (tiempo - self.descanso(tiempo)) * self.intensidad()
 
@@ -17,20 +21,19 @@ class Maraton inherits Running {
 }
 
 class Remo inherits Rutina {
-	const intensidad = 1.3
-	
 	override method descanso(tiempo) = tiempo / 5
-	override method intensidad() = intensidad
+	override method intensidad() = 1.3
 }
 
 
 class RemoDeCompeticion inherits Remo {
-	override method intensidad() = 1.7
-
 	override method descanso(tiempo) = (super(tiempo) - 3).max(2)
+	override method intensidad() = 1.7
 }
 
-
+//=======================================
+//2. Personas
+//=======================================
 class Persona {
 	var property peso = 0
 
@@ -39,40 +42,35 @@ class Persona {
 		peso = peso - self.pesoPerdido(rutina)
 	}
 	method validarAplicarRutina(rutina) {
-		if (!self.sePuedeaplicarRutina(rutina)){
-			self.error("No es posible aplicar la rutina.")
+		if (!self.sePuedeAplicarRutina(rutina)){
+			self.error("No es posible aplicar la rutina")
 		}
 	}
-	method sePuedeaplicarRutina(rutina)  
+	method sePuedeAplicarRutina(rutina)  
 
-	method pesoPerdido(rutina) = rutina.caloriasConsumidas(self.tiempo()) / self.caloriasPorKilo()
+	method pesoPerdido(rutina) = rutina.caloriasConsumidas(self.tiempoQueEjercita()) / self.caloriasPorKilo()
 
 	method caloriasPorKilo()  
 
-	method tiempo()  
+	method tiempoQueEjercita() 
 
-	method rutina()
+	//mensaje para predio:
+	method caloriasConsumidaEnRutina(rutina) = rutina.caloriasConsumidas(self.tiempoQueEjercita())
 }
 
 class PersonaSedentario inherits Persona {	
 	var property tiempoQueEjercita
-	
-	override method tiempo() = tiempoQueEjercita 
 
-	override method sePuedeaplicarRutina(rutina) = peso > 50
+	override method sePuedeAplicarRutina(rutina) = peso > 50
 
 	override method caloriasPorKilo() = 7000
 
 }
 
 class PersonaAtleta inherits Persona {
-	const tiempoQueEjercita = 90
+	override method tiempoQueEjercita() = 90 
 
-	method tiempoQueEjercita() = tiempoQueEjercita 
-
-	override method tiempo() = tiempoQueEjercita 
-
-	override method sePuedeaplicarRutina(rutina) = rutina.caloriasConsumidas(tiempoQueEjercita) > 10000
+	override method sePuedeAplicarRutina(rutina) = rutina.caloriasConsumidas(self.tiempoQueEjercita()) > 10000
 
 	override method pesoPerdido(rutina) = super(rutina) - 1
 	override method caloriasPorKilo() = 8000
@@ -84,8 +82,7 @@ class Club{
 	const predios = []
 
 	//3.1
-	method mejorPredioPara(persona) = self.predioQueQuemaMasCalorias(persona)
-	method predioQueQuemaMasCalorias(persona) = predios.max({predio => predio.caloriasConsumidasEnTodasRutinasPor(persona)})  
+	method mejorPredioPara(persona) = predios.max({predio => predio.caloriasConsumidasEnTodasRutinasPor(persona)})  
 
 	//3.2
 	method prediosTranquisPara(persona) = predios.filter({predio => predio.hayRutinaQueGastaMenosCaloriasPor(persona)}) 
@@ -98,14 +95,13 @@ class Predio {
 	const rutinas = []
 
 	//3.1
-	method caloriasConsumidasEnTodasRutinasPor(persona) = rutinas.sum({rutina => rutina.caloriasConsumidas(persona.tiempoQueEjercita())}) 
+	method caloriasConsumidasEnTodasRutinasPor(persona) = rutinas.sum({rutina => persona.caloriasConsumidaEnRutina(rutina)}) 
 
 	//3.2
-	method hayRutinaQueGastaMenosCaloriasPor(persona) = 
-		rutinas.any({rutina => rutina.caloriasConsumidas(persona.tiempoQueEjercita()) < self.caloriasMaximas()})
+	method hayRutinaQueGastaMenosCaloriasPor(persona) =  rutinas.any({rutina => persona.caloriasConsumidaEnRutina(rutina) < self.caloriasMaximas()})
 	method caloriasMaximas() = 500 
 
 	//3.3
-	method rutinaMasExigentePara(persona) = rutinas.max({rutina => rutina.caloriasConsumidas(persona.tiempoQueEjercita())}) 
+	method rutinaMasExigentePara(persona) = rutinas.max({rutina => persona.caloriasConsumidaEnRutina(rutina)}) 
 
 }
