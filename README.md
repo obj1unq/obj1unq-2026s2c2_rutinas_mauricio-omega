@@ -163,6 +163,33 @@ son la maratón de buenos aires y remar en el delta.
 
 ## 4. Reflexión
 1. Indicar un template method en la solución. Dónde está el template y cuales son los métodos hooks. Indicar quienes implementan métodos hooks
+### Template method 1: cálculo de calorías de una rutina
+
+El método plantilla es el mensaje `caloriasConsumidas(tiempo)`, definido en la clase `Rutina`. Define la estructura del cálculo (`100 * (tiempo - descanso) * intensidad`) y delega las partes que varían en dos métodos hook, que `Rutina` declara abstractos:
+
+- `descanso(tiempo)`
+- `intensidad()`
+
+| Hook | Lo implementan |
+|---|---|
+| `descanso(tiempo)` | `Running`, `Remo`, `RemoDeCompeticion` |
+| `intensidad()` | `Running`, `Remo`, `RemoDeCompeticion` |
+
+`Maraton` hereda los hooks de `Running`, por lo que no los implementa por su cuenta.
+
+### Template method 2: aplicar una rutina a una persona
+
+El método plantilla es el mensaje `aplicarRutina(rutina)`, definido en la clase `Persona`. Su estructura es: validar que la persona pueda aplicar la rutina y, si puede, restar el peso perdido.
+
+- **Métodos auxiliares (helpers), definidos en `Persona`:** `validarAplicarRutina(rutina)` y `pesoPerdido(rutina)`. Este último lo redefine `PersonaAtleta`.
+- **Métodos hook (abstractos en `Persona`):** `sePuedeAplicarRutina(rutina)`, `caloriasPorKilo()` y `tiempoQueEjercita()`.
+
+| Hook | Lo implementan |
+|---|---|
+| `sePuedeAplicarRutina(rutina)` | `PersonaSedentario`, `PersonaAtleta` |
+| `caloriasPorKilo()` | `PersonaSedentario`, `PersonaAtleta` |
+| `tiempoQueEjercita()` | `PersonaSedentario`, `PersonaAtleta` |
+
 2. Dibujar un diagrama estático que muestre la relación entre clubes, predios y rutinas. Se pide solo incluir los métodos polimórficos y los relacionados con el template method del punto anterior
 
 

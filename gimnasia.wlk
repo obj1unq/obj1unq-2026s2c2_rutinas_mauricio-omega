@@ -70,7 +70,7 @@ class PersonaSedentario inherits Persona {
 class PersonaAtleta inherits Persona {
 	override method tiempoQueEjercita() = 90 
 
-	override method sePuedeAplicarRutina(rutina) = rutina.caloriasConsumidas(self.tiempoQueEjercita()) > 10000
+	override method sePuedeAplicarRutina(rutina) = self.caloriasConsumidaEnRutina(rutina) > 10000
 
 	override method pesoPerdido(rutina) = super(rutina) - 1
 	override method caloriasPorKilo() = 8000
